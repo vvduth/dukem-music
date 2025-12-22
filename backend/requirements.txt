@@ -1,5 +1,10 @@
-transformers
-diffusers
-torch
+transformers==4.46.3
+diffusers==0.31.0
+peft==0.17.0
+torch>=2.0.0
+torchcodec
 pydantic
 boto3
+accelerate
+sentencepiece
+protobuf

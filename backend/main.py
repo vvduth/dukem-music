@@ -168,9 +168,17 @@ class MusicGenServer:
         s3_client.upload_file(output_path, bucket_name, audio_s3_key)
         os.remove(output_path)
 
-        # thumbnail generation
-        thumbnail_prompt = f"{prompt}, album cover art"
-        image = self.image_pipe(prompt=thumbnail_prompt, num_inference_steps=2, guidance_scale=0.0).images[0]
+        # thumbnail generation with enhanced prompt engineering
+        genre_keywords = prompt.split(',')[0:2]  # Extract first 2 tags for genre
+        thumbnail_prompt = f"high quality album cover art, {', '.join(genre_keywords)}, professional music artwork, vibrant colors, modern design, artistic, centered composition, studio quality"
+        negative_prompt = "blurry, low quality, distorted, ugly, bad art, watermark, text, signature, amateur"
+        
+        image = self.image_pipe(
+            prompt=thumbnail_prompt,
+            negative_prompt=negative_prompt,
+            num_inference_steps=4,  # Increased from 2 for better quality
+            guidance_scale=0.0
+        ).images[0]
 
         image_output_path = os.path.join(output_dir, f"{uuid.uuid4()}.png")
         image.save(image_output_path)

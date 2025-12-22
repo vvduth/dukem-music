@@ -1,31 +1,75 @@
 PROMPT_GENERATOR_PROMPT = """
-Reformat the following user-provided music description into a simple comma-separated list of audio tags.
+You are an expert music producer. Reformat the following user-provided music description into precise, comma-separated audio tags optimized for music generation.
 
 User Description: "{user_prompt}"
 
-Follow these guidelines strictly when reformatting. Include a tag from each category below in you final list:
-- Include genre (e.g., "rap", "pop", "rock", "electronic")
-- Include vocal type (e.g., "male vocal", "female vocal", "spoken word")
-- Include instruments actually heard (e.g., "guitar", "piano", "synthesizer", "drums")
-- Include mood/energy (e.g., "energetic", "calm", "aggressive", "melancholic")
-- Include tempo if known (e.g., "120 bpm", "fast tempo", "slow tempo")
-- Include key if known (e.g., "major key", "minor key", "C major")
-- The output must be a single line of comma-separated tags. Do not add any other text or explanation. For example: melodic techno, male vocal, electronic, emotional, minor key, 124 bpm, synthesizer, driving, atmospheric
+Guidelines for creating tags:
+1. Genre (2-3 specific subgenres): "melodic techno", "indie folk", "trap rap", "progressive house"
+2. Vocal characteristics: "male vocal", "female vocal", "smooth vocals", "raspy voice", "harmonized vocals"
+3. Key instruments (3-4 primary): "electric guitar", "808 bass", "analog synthesizer", "acoustic drums", "piano"
+4. Mood/Emotion (2-3): "uplifting", "melancholic", "energetic", "dreamy", "aggressive", "nostalgic"
+5. Production style: "reverb-heavy", "lo-fi", "crisp production", "atmospheric", "punchy", "warm"
+6. Tempo descriptor: "fast tempo", "mid-tempo", "slow tempo", "120 bpm" (if specific)
+7. Musical key (if known): "minor key", "major key", "C minor", "G major"
 
-If already a few tags, infer what the user wants and add 2-3 more tags that are synonyms to the users tags with no new categories.
+Output format: Single line of comma-separated tags, NO explanations.
+Example: melodic techno, male vocal, emotional, atmospheric, synthesizer, 808 bass, reverb-heavy, minor key, 124 bpm, driving, uplifting
+
+If the description is already brief tags, expand with 3-5 complementary descriptors.
 
 Formatted Tags:
 """
 
 LYRICS_GENERATOR_PROMPT = """
-Generate song lyrics based on the following description.
-The lyrics should be suitable for a song and structured clearly.
-Use tags like [verse], [chorus], [bridge], [intro], and [outro] to structure the song.
-
-Here is an example:
-"[verse]\nWoke up in a city that's always alive\nNeon lights they shimmer they thrive\nElectric pulses beat they drive\nMy heart races just to survive\n\n[chorus]\nOh electric dreams they keep me high\nThrough the wires I soar and fly\nMidnight rhythms in the sky\nElectric dreams together we’ll defy\n\n[verse]\nLost in the labyrinth of screens\nVirtual love or so it seems\nIn the night the city gleams\nDigital faces haunted by memes\n\n[chorus]\nOh electric dreams they keep me high\nThrough the wires I soar and fly\nMidnight rhythms in the sky\nElectric dreams together we’ll defy\n\n[bridge]\nSilent whispers in my ear\nPixelated love serene and clear\nThrough the chaos find you near\nIn electric dreams no fear\n\n[verse]\nBound by circuits intertwined\nLove like ours is hard to find\nIn this world we’re truly blind\nBut electric dreams free the mind"
+You are a professional songwriter. Generate engaging, singable song lyrics based on the description below.
 
 Description: "{description}"
 
-Lyrics:
+Requirements:
+- Structure: Use [verse], [chorus], [bridge] tags. Include 2-3 verses, 2-3 choruses, optional bridge.
+- Chorus: Keep it memorable, catchy, and repetitive (the hook).
+- Verses: Tell a story or develop the theme, 4-6 lines each.
+- Bridge: Provide contrast or emotional shift, 4 lines.
+- Rhyme scheme: Natural and consistent (AABB, ABAB, or ABCB patterns).
+- Syllable count: Keep lines balanced for musical flow.
+- Language: Conversational, vivid imagery, avoid clichés.
+
+Example structure:
+[verse]
+Woke up in a city that never sleeps
+Neon lights painting stories in the streets
+Electric pulses racing through my veins
+Chasing shadows dancing in the rain
+
+[chorus]
+Electric dreams keep pulling me higher
+Through the wires we're souls on fire
+Midnight rhythms guide us through the night
+In electric dreams we come alive
+
+[verse]
+Lost between the screens and reality
+Pixelated love feels so complete to me
+In this digital maze I found my way
+Virtual hearts beating night and day
+
+[chorus]
+Electric dreams keep pulling me higher
+Through the wires we're souls on fire
+Midnight rhythms guide us through the night
+In electric dreams we come alive
+
+[bridge]
+Silent whispers echo in my mind
+Through the chaos you're all I find
+Binary code can't define this feeling
+In your arms I'm finally healing
+
+[chorus]
+Electric dreams keep pulling me higher
+Through the wires we're souls on fire
+Midnight rhythms guide us through the night
+In electric dreams we come alive
+
+Now generate lyrics:
 """

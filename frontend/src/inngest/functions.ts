@@ -116,24 +116,34 @@ export const generateSong = inngest.createFunction(
             headers: {
                 "Content-Type": "application/json",
                 "Modal-Key":env.MODAL_KEY,
-                "Modal_Secret": env.MODAL_SECRET,
+                "Modal-Secret": env.MODAL_SECRET,
             },
         })
         await step.run("update-song-result", async () => {
-            const responseData = response.ok ? (await response.json() as {
-                s3_key: string;
-                cover_image_s3_key: string;
-                categories: string[];
-            }) : null;
+            let responseData: {
+              s3_key: string;
+              cover_image_s3_key: string;
+              categories: string[];
+            } | null = null;
+
+            if (response.ok) {
+                const text = await response.text();
+                try {
+                    responseData = JSON.parse(text);
+                } catch (e) {
+                    console.error("Failed to parse JSON response:", text);
+                }
+            }
+
             await db.song.update({
                 where: { id: songId },
                 data: {
-                    status: response.ok ? "done" : "failed",
                     s3Key: responseData?.s3_key,
                     thumbnailS3Key: responseData?.cover_image_s3_key,
+                    status: (response.ok && responseData) ? "processed" : "failed",
                 }
             })
-            if (responseData && responseData?.categories.length > 0) {
+            if (responseData && responseData.categories.length > 0) {
                 await db.song.update({
                     where: { id: songId },
                     data: {
@@ -147,7 +157,7 @@ export const generateSong = inngest.createFunction(
                 })
             }
         })
-        return await step.run("deduct-credit", async () => {
+        return await step.run("deduct-credits", async () => {
             if (!response.ok) return;
             return await db.user.update({
                 where: { id: userId },

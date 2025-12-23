@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import React from 'react'
+import CreateSong from '~/components/create'
 import { auth } from '~/lib/auth'
 
 const Dashboard = async () => {
@@ -17,6 +18,7 @@ const Dashboard = async () => {
   return (
       <div className="p-4">
       <h1 className="text-3xl font-bold tracking-tight">Discover Music</h1>
+      <CreateSong />
     </div>
   )
 }

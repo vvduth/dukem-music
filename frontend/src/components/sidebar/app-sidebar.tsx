@@ -1,6 +1,3 @@
-"use server";
-
-
 import {
   Sidebar,
   SidebarContent,
@@ -9,11 +6,11 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "../ui/sidebar";
-
-
+import Credits from "./credit";
+import SidebarMenuItems from "./sidebar-menu-items";
+import { LogoutButton } from "../auth/logout-button";
+import Upgrade from "./upgrade";
 
 export async function AppSidebar() {
   return (
@@ -26,16 +23,20 @@ export async function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <></>
+              <SidebarMenuItems />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <div className="mb-2 flex w-full items-center justify-center gap-1 text-xs">
-         
+          <Credits  />
+          <Upgrade />
         </div>
-        
+        {/* logout button */}
+        <div className="mb-2 flex w-full items-center justify-center gap-1 text-xs">
+          <LogoutButton />
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

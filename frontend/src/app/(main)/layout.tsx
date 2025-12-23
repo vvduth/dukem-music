@@ -19,6 +19,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import BreadcrumbPageClient from "~/components/sidebar/breadcrumb-page-client";
 
 
 export const metadata: Metadata = {
@@ -52,7 +53,7 @@ export default function RootLayout({
                   <Breadcrumb>
                     <BreadcrumbList>
                       <BreadcrumbItem>
-                        
+                        <BreadcrumbPageClient />
                       </BreadcrumbItem>
                     </BreadcrumbList>
                   </Breadcrumb>

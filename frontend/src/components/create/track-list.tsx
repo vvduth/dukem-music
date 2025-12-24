@@ -27,6 +27,8 @@ import {
 
 import { useRouter } from "next/navigation";
 import { getPlayUrl } from "~/actions/generate";
+import { renameSong, setPublishStatus } from "~/actions/song";
+import RenameDialog from "./rename-dialog";
 
 export interface Track {
   id: string;
@@ -46,7 +48,9 @@ export interface Track {
 const TrackList = ({ tracks }: { tracks: Track[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [refeshing, setRefreshing] = useState(false);
-    const [loadingTrackId, setLoadingTrackId] = useState<string|null>(null)
+  const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
+  const [trackToRename, setTrackToRename] = useState<Track | null>(null);
+  const router = useRouter();
   const filteredTracks = tracks.filter(
     (track) =>
       track.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,7 +59,7 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
 
   const handleTrackSelect = async (track: Track) => {
     if (loadingTrackId) {
-        return;
+      return;
     }
     setLoadingTrackId(track.id);
     const playUrl = await getPlayUrl(track.id);
@@ -63,7 +67,15 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
 
     console.log("Play URL:", playUrl);
     // play the track using the obtained playUrl
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    router.refresh();
+    setTimeout(() => setRefreshing(false), 1000);
   }
+
+  
   return (
     <div className="flex flex-1 flex-col overflow-y-scroll">
       <div className="flex-1 p-6">
@@ -80,9 +92,7 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
           <Button
             disabled={refeshing}
             variant={"outline"}
-            onClick={() => {
-              console.log("Refresh clicked");
-            }}
+            onClick={() => handleRefresh()}
           >
             {refeshing ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -165,8 +175,8 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
                       {/* thumbnail */}
                       <div className="group relative flex h-12 w-12 shrink-0 overflow-hidden rounded-md">
                         {track.thumbnailUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
                             className="h-full w-full object-cover"
                             src={track.thumbnailUrl}
                           />
@@ -175,6 +185,73 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
                             <Music className="text-muted-foreground h-6 w-6" />
                           </div>
                         )}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                          {loadingTrackId === track.id ? (
+                            <Loader2 className="animate-spin text-white" />
+                          ) : (
+                            <Play className="fill-white text-white" />
+                          )}
+                        </div>
+                      </div>
+                      {/* track info */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="truncate text-sm font-medium">
+                            {track.title}
+                          </h3>
+                          {track.instrumental && (
+                            <Badge variant="outline">Instrumental</Badge>
+                          )}
+                        </div>
+                        <p className="text-muted-foreground text-xs">
+                          {" "}
+                          {track.prompt}
+                        </p>
+                      </div>
+                      {/* actions */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant={"outline"}
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            await setPublishStatus(track.id, 
+                                !track.published);
+                          }}
+                          size="sm"
+                          className={`cursor-pointer ${
+                            track.published
+                              ? "bg-green-600 hover:bg-green-700 text-gray-300"
+                              : ""
+                          }`}
+                        >
+                          {track.published ? "Unpushlish" : "Publish"}
+                        </Button>
+                          <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const playUrl = await getPlayUrl(track.id);
+                                window.open(playUrl, "_blank");
+                              }}
+                            >
+                              <Download className="mr-2" /> Download
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setTrackToRename(track);
+                              }}
+                            >
+                              <Pencil className="mr-2" /> Rename
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   );
@@ -190,6 +267,13 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
           )}
         </div>
       </div>
+      {trackToRename && (
+        <RenameDialog   
+            track={trackToRename}
+            onClose={() => setTrackToRename(null)}
+            onRename={(trackId, newTitle) => renameSong(trackId, newTitle)}
+        />
+      )}
     </div>
   );
 };

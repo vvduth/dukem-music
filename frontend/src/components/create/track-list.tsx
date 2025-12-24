@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { getPlayUrl } from "~/actions/generate";
 import { renameSong, setPublishStatus } from "~/actions/song";
 import RenameDialog from "./rename-dialog";
+import { usePlayerStore } from "~/stores/user-player-store";
 
 export interface Track {
   id: string;
@@ -51,6 +52,7 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
   const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
   const [trackToRename, setTrackToRename] = useState<Track | null>(null);
   const router = useRouter();
+  const setTrack = usePlayerStore((state) => state.setTrack);
   const filteredTracks = tracks.filter(
     (track) =>
       track.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -67,6 +69,14 @@ const TrackList = ({ tracks }: { tracks: Track[] }) => {
 
     console.log("Play URL:", playUrl);
     // play the track using the obtained playUrl
+    setTrack({
+      id: track.id,
+      title: track.title,
+      url: playUrl,
+      artwork: track.thumbnailUrl,
+      prompt: track.prompt,
+      createdByUserName: track.createdByUserName,
+    })
   };
 
   const handleRefresh = async () => {

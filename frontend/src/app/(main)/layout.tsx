@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <Providers>
-          <SidebarProvider>
+          <SidebarProvider defaultOpen={false}>
             <AppSidebar />
             <SidebarInset className="flex h-screen flex-col">
               <header className="bg-background sticky-top z-10 border-b px-4 py-2">

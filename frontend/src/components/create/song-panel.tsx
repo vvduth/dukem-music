@@ -111,7 +111,6 @@ const SongPanel = () => {
       setDescription("");
       setLyrics("");
       setStyleInput("");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
       toast.error("An error occurred while generating the song.");
       console.error("Song generation error:", error);

@@ -44,7 +44,7 @@ export async function toggleLikeSong(songId: string) {
     headers: await headers(),
   });
 
-  if (!session) redirect("/auth/sign-in");
+  if (!session) redirect("/auth/login");
 
   const existingLike = await db.like.findUnique({
     where: {

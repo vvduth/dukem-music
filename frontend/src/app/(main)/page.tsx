@@ -13,7 +13,7 @@ export default async function Page() {
   });
 
   if (!session) {
-    redirect("/auth/sign-in");
+    redirect("/auth/login");
   }
 
   const songs = await db.song.findMany({

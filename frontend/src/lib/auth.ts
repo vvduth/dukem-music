@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { db } from "~/server/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { env } from "~/env";
 import { Polar } from "@polar-sh/sdk";
-import { polar, checkout, portal, usage, webhooks } from "@polar-sh/better-auth";
-import { th } from "zod/v4/locales";
+import { polar, checkout, portal, webhooks } from "@polar-sh/better-auth";
+
 const polarClient = new Polar({
     accessToken: env.POLAR_ACCESS_TOKEN,
     // Use 'sandbox' if you're using the Polar Sandbox environment

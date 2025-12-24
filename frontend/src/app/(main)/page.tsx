@@ -2,6 +2,7 @@ import { Music } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getPreSignedUrl } from "~/actions/generate";
+import { SongCard } from "~/components/home/song-card";
 
 import { auth } from "~/lib/auth";
 import { db } from "~/server/db";
@@ -109,7 +110,7 @@ export default async function Page() {
           <h2 className="text-xl font-semibold">Trending</h2>
           <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {trendingSongs.map((song) => (
-              <></>
+               <SongCard key={song.id} song={song} />
             ))}
           </div>
         </div>
@@ -123,7 +124,7 @@ export default async function Page() {
             <h2 className="text-xl font-semibold">{category}</h2>
             <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {songs.map((song) => (
-                <></>
+                 <SongCard key={song.id} song={song} />
               ))}
             </div>
           </div>
